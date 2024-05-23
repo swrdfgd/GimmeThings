@@ -245,7 +245,7 @@
 
 				// Menampilkan nada dan instrumen
 				document.getElementById('content').innerHTML = `${randomFrequency.note}${randomInstrument.emoji}`;
-				document.getElementById('content').innerHTML += '<br><button onclick="currentInstrument.triggerAttackRelease(randomFrequency.freq, \'8n\');" class="play-btn"><span class="play-icon"></span></button>';
+				document.getElementById('content').innerHTML += '<br><button onclick="currentInstrument.triggerAttackRelease('+randomFrequency.freq+', \'8n\');" class="play-btn"><span class="play-icon"></span></button>';
 				break;
 			}
 			
