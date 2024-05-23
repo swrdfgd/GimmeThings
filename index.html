@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gimme Things</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            position: relative;
+            background-color: #f0f0f0;
+        }
+        .corner-button {
+            position: absolute;
+            width: 200px;
+            height: 100px;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+            border-radius: 50px; /* Membuat tombol berbentuk elips */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border: 3px solid #fff; /* Menambahkan border */
+        }
+        .corner-button:active {
+            transform: scale(0.95); /* Efek animasi saat tombol ditekan */
+            background: radial-gradient(circle at center, #ffffff, #ff4500); /* Warna berubah saat ditekan */
+        }
+        #button-top-left {
+            top: 20px;
+            left: 20px;
+            background: radial-gradient(circle at center, #ffffff, #ff7f50);
+        }
+        #button-top-right {
+            top: 20px;
+            right: 20px;
+            background: radial-gradient(circle at center, #ffffff, #7fff00);
+        }
+        #button-bottom-left {
+            bottom: 20px;
+            left: 20px;
+            background: radial-gradient(circle at center, #ffffff, #1e90ff);
+        }
+        #button-bottom-right {
+            bottom: 20px;
+            right: 20px;
+            background: radial-gradient(circle at center, #ffffff, #ff69b4);
+        }
+        #content {
+            width: 60%;
+			height: 50%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border: 2px solid black;
+			background-color: #fff;
+			font-size: 48px; /* Ukuran teks besar */
+			text-align: center;
+			transition: background-color 0.3s;
+			color: white; /* Warna teks putih */
+			text-shadow: 2px 2px 10px #000000; /* Shadow hitam tebal */
+        }
+        @media (max-width: 800px) {
+            .corner-button {
+                width: 150px;
+                height: 75px;
+                font-size: 16px;
+            }
+            #content {
+                width: 70%;
+                height: 40%;
+                font-size: 20px;
+            }
+        }
+        @media (max-width: 600px) {
+            .corner-button {
+                width: 100px;
+                height: 50px;
+                font-size: 14px;
+            }
+            #content {
+                width: 80%;
+                height: 30%;
+                font-size: 18px;
+            }
+        }
+		
+		.play-btn {
+			width: 100px;
+			height: 100px;
+			background-color: #FFD700; /* Warna kuning */
+			border: 0;
+			position: relative;
+			cursor: pointer;
+		}
+
+		.play-icon {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%) rotate(270deg);
+			width: 0;
+			height: 0;
+			border-left: 30px solid transparent;
+			border-right: 30px solid transparent;
+			border-top: 50px solid #fff; /* Warna putih */
+		}
+    </style>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.39/Tone.min.js"></script>
+</head>
+<body>
+    <button id="button-top-left" class="corner-button">Button 1</button>
+    <button id="button-top-right" class="corner-button">Button 2</button>
+    <button id="button-bottom-left" class="corner-button">Button 3</button>
+    <button id="button-bottom-right" class="corner-button">Button 4</button>
+
+    <div id="content">Press a Button</div>
+	
+	<script>
+	//Fungsi-Fungsi
+	function getRandomHexColor() {
+		// Generate a random integer between 0 and 16777215 (0xFFFFFF)
+		const randomInt = Math.floor(Math.random() * 16777215);
+		// Convert the integer to a hexadecimal string and pad with leading zeros if necessary
+		const hexString = randomInt.toString(16).padStart(6, '0');
+		// Return the hex color code with a leading '#'
+		return `#${hexString}`;
+	}
+	
+	//Music Note
+        // Daftar frekuensi nada dalam skala musik yang lebih lengkap (C4 hingga B4 termasuk nada kromatis)
+        const frequencies = [
+            { note: 'C4', freq: 261.63 },
+            { note: 'C#4/Db4', freq: 277.18 },
+            { note: 'D4', freq: 293.66 },
+            { note: 'D#4/Eb4', freq: 311.13 },
+            { note: 'E4', freq: 329.63 },
+            { note: 'F4', freq: 349.23 },
+            { note: 'F#4/Gb4', freq: 369.99 },
+            { note: 'G4', freq: 392.00 },
+            { note: 'G#4/Ab4', freq: 415.30 },
+            { note: 'A4', freq: 440.00 },
+            { note: 'A#4/Bb4', freq: 466.16 },
+            { note: 'B4', freq: 493.88 }
+        ];
+
+        // Daftar instrumen yang tersedia di Tone.js beserta emoji
+        const instruments = [
+            { create: () => new Tone.Synth().toDestination(), emoji: '🎹' },
+            { create: () => new Tone.AMSynth().toDestination(), emoji: '🎷' },
+            { create: () => new Tone.FMSynth().toDestination(), emoji: '🎸' },
+            { create: () => new Tone.MembraneSynth().toDestination(), emoji: '🥁' },
+            { create: () => new Tone.MetalSynth().toDestination(), emoji: '🔔' },
+            { create: () => new Tone.NoiseSynth({
+                noise: {
+                    type: 'white'
+                },
+                envelope: {
+                    attack: 0.005,
+                    decay: 0.1,
+                    sustain: 0.1,
+                    release: 1
+                }
+            }).toDestination(), emoji: '🌬️' },
+            { create: () => new Tone.PluckSynth({
+                attackNoise: 0.1,
+                dampening: 1000,
+                resonance: 0.7,
+                release: 1
+            }).toDestination(), emoji: '🎻' }
+        ];
+
+        let currentInstrument = null;
+
+        // Fungsi untuk menghasilkan nada acak
+        function getRandomFrequency() {
+            return frequencies[Math.floor(Math.random() * frequencies.length)];
+        }
+
+        // Fungsi untuk menghasilkan instrumen acak
+        function getRandomInstrument() {
+            return instruments[Math.floor(Math.random() * instruments.length)];
+        }
+
+        // Fungsi untuk memainkan nada acak dengan instrumen acak
+        function playRandomNote() {
+            // Matikan instrumen saat ini jika ada
+            if (currentInstrument) {
+                currentInstrument.dispose();
+            }
+
+            const randomFrequency = getRandomFrequency();
+            const randomInstrument = getRandomInstrument();
+
+            currentInstrument = randomInstrument.create();
+            currentInstrument.triggerAttackRelease(randomFrequency.freq, '8n');
+
+            // Menampilkan nada dan instrumen
+            document.getElementById('note').innerText = `Note: ${randomFrequency.note}`;
+            document.getElementById('instrument').innerText = `Instrument: ${randomInstrument.emoji}`;
+        }
+	
+	</script>
+
+    <script>
+		jenisTombol = [
+		['number','Gimme Number',],
+		['letter','Gimme Letter',],
+		['color','Gimme Color',],
+		['sound','Gimme Sound',],
+		];
+		
+		function press(act){
+			switch(act) {
+			  case 'number':
+				document.getElementById('content').innerHTML = Math.floor(Math.random()*10);
+				break;
+			  case 'letter':
+				document.getElementById('content').innerHTML = 'QWERTYUIOPASDFGHJKLZXCVBNM'[Math.floor(Math.random()*26)];
+				break;
+			  case  'color':
+				document.getElementById('content').style.backgroundColor = getRandomHexColor();
+				break;
+			  case 'sound':
+			    // Matikan instrumen saat ini jika ada
+				if (currentInstrument) {
+					currentInstrument.dispose();
+				}
+
+				const randomFrequency = getRandomFrequency();
+				const randomInstrument = getRandomInstrument();
+
+				currentInstrument = randomInstrument.create();
+
+				// Menampilkan nada dan instrumen
+				document.getElementById('content').innerHTML = `${randomFrequency.note}${randomInstrument.emoji}`;
+				document.getElementById('content').innerHTML += '<br><button onclick="currentInstrument.triggerAttackRelease(randomFrequency.freq, \'8n\');" class="play-btn"><span class="play-icon"></span></button>';
+				break;
+			}
+			
+			generateTombol();			
+		}
+		
+		function generateTombol(){
+			a = jenisTombol[Math.floor(Math.random()*jenisTombol.length)];
+			b = jenisTombol[Math.floor(Math.random()*jenisTombol.length)];
+			c = jenisTombol[Math.floor(Math.random()*jenisTombol.length)];
+			d = jenisTombol[Math.floor(Math.random()*jenisTombol.length)];
+		
+			document.getElementById('button-top-left').innerHTML = a[1];
+			document.getElementById('button-top-right').innerHTML = b[1];
+			document.getElementById('button-bottom-left').innerHTML = c[1];
+			document.getElementById('button-bottom-right').innerHTML = d[1];		
+		}
+		generateTombol();
+		
+		
+		document.getElementById('button-top-left').addEventListener('click', function() {
+			press(a[0]);
+		});
+		
+		
+		document.getElementById('button-top-right').addEventListener('click', function() {
+			press(b[0]);
+		});
+
+		document.getElementById('button-bottom-left').addEventListener('click', function() {
+			press(c[0]);
+		});
+
+		document.getElementById('button-bottom-right').addEventListener('click', function() {
+			press(d[0])
+		});
+</script>
+</body>
+</html>
