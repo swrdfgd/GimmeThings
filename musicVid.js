@@ -1,4 +1,4 @@
-daftarApi = ['AIzaSyBwwv3LrgSG3NcETgahW-3-_DyP74GwViA','AIzaSyB7TX3CfUSUBnWnNP9CGBjLzmfIeo6SpfM'] 
+daftarApi = ['AIzaSyBwwv3LrgSG3NcETgahW-3-_DyP74GwViA','AIzaSyB7TX3CfUSUBnWnNP9CGBjLzmfIeo6SpfM'];
 daftarChannelAda = [];
 
 function videoTop(firstTime = true, nextPageToken = '', idChannel = '', apiKey = '') {
