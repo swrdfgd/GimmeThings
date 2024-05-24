@@ -180,6 +180,7 @@
             { create: () => new Tone.FMSynth().toDestination(), emoji: '🎸' },
             { create: () => new Tone.MembraneSynth().toDestination(), emoji: '🥁' },
             { create: () => new Tone.MetalSynth().toDestination(), emoji: '🔔' },
+			/*
             { create: () => new Tone.NoiseSynth({
                 noise: {
                     type: 'white'
@@ -197,11 +198,13 @@
                 resonance: 0.7,
                 release: 1
             }).toDestination(), emoji: '🎻' }
+			*/
         ];
 
         let currentInstrument = null;
 		let currentInstruments = []; // Menggunakan array untuk menyimpan instance instrumen
 		let randomChord = [];
+		let currentPart = null;
 
         // Fungsi untuk menghasilkan nada acak
         function getRandomFrequency() {
@@ -226,7 +229,8 @@
         function getRandomMelody(length) {
             const melody = [];
             for (let i = 0; i < length; i++) {
-                melody.push(getRandomFrequency().freq);
+                const note = getRandomFrequency();
+                melody.push({ time: `0:${i}`, note: note.freq, noteName: note.note });
             }
             return melody;
         }
@@ -251,8 +255,27 @@
 		function matikanMusik(){
 			if (currentInstrument) {currentInstrument.dispose();}
 			currentInstruments.forEach(inst => {inst.dispose();});
+			if (currentPart) {
+                currentPart.stop();
+                currentPart.dispose();
+            }
 		}
-	
+		
+		function replayMelody(){
+					// Matikan instrumen saat ini jika ada
+					matikanMusik();
+					
+					Tone.Transport.stop();
+                    Tone.Transport.cancel();
+
+					currentInstrument = randomInstrument.create();
+					
+					currentPart = new Tone.Part((time, value) => {
+                    currentInstrument.triggerAttackRelease(value.note, '8n', time);
+                    }, randomMelody).start(0);
+					Tone.Transport.start();
+
+		}
 	</script>
 
     <script>
@@ -319,16 +342,26 @@
 				case 'melody':
 					// Matikan instrumen saat ini jika ada
 					matikanMusik();
+					
+					Tone.Transport.stop();
+                    Tone.Transport.cancel();
 
 					randomMelody = getRandomMelody(1+Math.ceil(Math.random()*9)); // Misalnya, melodi dengan 8 nada
 					randomInstrument = getRandomInstrument();
 
 					currentInstrument = randomInstrument.create();
 					
+					currentPart = new Tone.Part((time, value) => {
+                    currentInstrument.triggerAttackRelease(value.note, '8n', time);
+                    }, randomMelody).start(0);
+
+                    // Atur tempo
+                    Tone.Transport.bpm.value = 119 + Math.ceil(Math.random()*81);
+					Tone.Transport.start();
 
 				   // Menampilkan chord dan instrumen
-					document.getElementById('content').innerHTML = `Melody: ${randomMelody.map(frequencyToNote).join(', ')}${randomInstrument.emoji}`;
-					document.getElementById('content').innerHTML += '<br><button onclick="let time = 0;randomMelody.forEach((note, index) => {currentInstrument.triggerAttackRelease(note, \'8n\', time);time += 0.5;});" class="play-btn"><span class="play-icon"></span></button>';
+					document.getElementById('content').innerHTML = `Melody: ${randomMelody.map(item => item.noteName).join(', ')}${randomInstrument.emoji}`;
+					document.getElementById('content').innerHTML += '<br><button onclick="replayMelody()" class="play-btn"><span class="play-icon"></span></button>';
 				break;
 			}
 			
