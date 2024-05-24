@@ -254,12 +254,16 @@
 		['sound','Gimme Sound'],
 		];
 		
-		flagTombol = {sound: 0,}
+		flagTombol = {sound: 0, number: 10,}
 		
 		function press(act){
 			switch(act) {
 			  case 'number':
-				document.getElementById('content').innerHTML = Math.floor(Math.random()*10);
+				angkaAcak = Math.floor(Math.random()*flagTombol.number);
+				document.getElementById('content').innerHTML = angkaAcak;
+				if (Math.random() < (1/(angkaAcak+1))){
+					flagTombol.number += angkaAcak;
+				}
 				break;
 			  case 'letter':
 				document.getElementById('content').innerHTML = 'QWERTYUIOPASDFGHJKLZXCVBNM'[Math.floor(Math.random()*26)];
