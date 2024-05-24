@@ -47,3 +47,6 @@ function genRandomMusicVid(){
 }
 
 videoTop();
+
+flagTombol.musicVideo = 1;
+jenisTombol.push(['musicVid','Gimme Music/Dance Video']);
