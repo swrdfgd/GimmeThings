@@ -291,7 +291,7 @@
 
 				// Menampilkan nada dan instrumen
 				document.getElementById('content').innerHTML = `${randomFrequency.note}${randomInstrument.emoji}`;
-				document.getElementById('content').innerHTML += '<br><button onclick="matikanMusik();currentInstrument.triggerAttackRelease('+randomFrequency.freq+', \'8n\');" class="play-btn"><span class="play-icon"></span></button>';
+				document.getElementById('content').innerHTML += '<br><button onclick="currentInstrument.triggerAttackRelease('+randomFrequency.freq+', \'8n\');" class="play-btn"><span class="play-icon"></span></button>';
 				if (flagTombol.sound == 0){
 					flagTombol.sound = 1;
 					jenisTombol.push(['chord','Gimme Chord']);
@@ -310,7 +310,7 @@
 
 			   // Menampilkan chord dan instrumen
 				document.getElementById('content').innerHTML = `Chord (${randomChordType}): ${randomChord.map(frequencyToNote).join(', ')}${randomInstrument.emoji}`;
-				document.getElementById('content').innerHTML += '<br><button onclick="matikanMusik();currentInstruments.forEach((inst, index) => {inst.triggerAttackRelease(randomChord[index], \'4n\');});" class="play-btn"><span class="play-icon"></span></button>';
+				document.getElementById('content').innerHTML += '<br><button onclick="currentInstruments.forEach((inst, index) => {inst.triggerAttackRelease(randomChord[index], \'4n\');});" class="play-btn"><span class="play-icon"></span></button>';
 				if (flagTombol.chordMelody == 0){
 					flagTombol.chordMelody = 1;
 					jenisTombol.push(['melody','Gimme Melody']);
@@ -328,7 +328,7 @@
 
 				   // Menampilkan chord dan instrumen
 					document.getElementById('content').innerHTML = `Melody: ${randomMelody.map(frequencyToNote).join(', ')}${randomInstrument.emoji}`;
-					document.getElementById('content').innerHTML += '<br><button onclick="matikanMusik();let time = 0;randomMelody.forEach((note, index) => {currentInstrument.triggerAttackRelease(note, \'8n\', time);time += 0.5;});" class="play-btn"><span class="play-icon"></span></button>';
+					document.getElementById('content').innerHTML += '<br><button onclick="let time = 0;randomMelody.forEach((note, index) => {currentInstrument.triggerAttackRelease(note, \'8n\', time);time += 0.5;});" class="play-btn"><span class="play-icon"></span></button>';
 				break;
 			}
 			
