@@ -116,8 +116,9 @@
 			border-top: 50px solid #fff; /* Warna putih */
 		}
     </style>
-	
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js' type='text/javascript'></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.39/Tone.min.js"></script>
+	
 </head>
 <body>
     <button id="button-top-left" class="corner-button">Button 1</button>
@@ -154,6 +155,23 @@
             { note: 'A#4/Bb4', freq: 466.16 },
             { note: 'B4', freq: 493.88 }
         ];
+		
+        // Daftar interval untuk berbagai jenis akord
+        const chordIntervals = {
+            major: [0, 4, 7],
+            minor: [0, 3, 7],
+            augmented: [0, 4, 8],
+            diminished: [0, 3, 6],
+            sus2: [0, 2, 7],
+            sus4: [0, 5, 7],
+            dominant7: [0, 4, 7, 10],
+            major7: [0, 4, 7, 11],
+            minor7: [0, 3, 7, 10],
+            diminished7: [0, 3, 6, 9],
+            augmented7: [0, 4, 8, 10],
+            minorMajor7: [0, 3, 7, 11]
+            // Anda dapat menambahkan jenis akord lain sesuai kebutuhan
+        };		
 
         // Daftar instrumen yang tersedia di Tone.js beserta emoji
         const instruments = [
@@ -182,34 +200,49 @@
         ];
 
         let currentInstrument = null;
+		let currentInstruments = []; // Menggunakan array untuk menyimpan instance instrumen
+		let randomChord = [];
 
         // Fungsi untuk menghasilkan nada acak
         function getRandomFrequency() {
             return frequencies[Math.floor(Math.random() * frequencies.length)];
         }
+		
+        // Fungsi untuk menghasilkan chord acak
+        function getRandomChord(chordType) {
+            const rootNoteObj = getRandomFrequency();
+            const rootNote = rootNoteObj.freq;
+            const intervals = chordIntervals[chordType];
+            if (!intervals) return []; // Jika jenis akord tidak ada dalam daftar, kembalikan array kosong
 
+            const chord = intervals.map(interval => {
+                const index = (frequencies.findIndex(note => note.freq === rootNote) + interval) % frequencies.length;
+                return frequencies[index].freq;
+            });
+            return chord;
+        }
+		
+        // Fungsi untuk memilih jenis chord secara acak
+        function getRandomChordType() {
+            const types = Object.keys(chordIntervals);
+            return types[Math.floor(Math.random() * types.length)];
+        }
+		
         // Fungsi untuk menghasilkan instrumen acak
         function getRandomInstrument() {
             return instruments[Math.floor(Math.random() * instruments.length)];
         }
 
-        // Fungsi untuk memainkan nada acak dengan instrumen acak
-        function playRandomNote() {
-            // Matikan instrumen saat ini jika ada
-            if (currentInstrument) {
-                currentInstrument.dispose();
-            }
-
-            const randomFrequency = getRandomFrequency();
-            const randomInstrument = getRandomInstrument();
-
-            currentInstrument = randomInstrument.create();
-            currentInstrument.triggerAttackRelease(randomFrequency.freq, '8n');
-
-            // Menampilkan nada dan instrumen
-            document.getElementById('note').innerText = `Note: ${randomFrequency.note}`;
-            document.getElementById('instrument').innerText = `Instrument: ${randomInstrument.emoji}`;
+       // Fungsi untuk mengonversi frekuensi menjadi nama nada
+        function frequencyToNote(frequency) {
+            const noteIndex = Math.round(12 * (Math.log2(frequency / 440))) + 57;
+            return frequencies[noteIndex % 12].note;
         }
+		
+		function matikanMusik(){
+			if (currentInstrument) {currentInstrument.dispose();}
+			currentInstruments.forEach(inst => {inst.dispose();});
+		}
 	
 	</script>
 
@@ -218,8 +251,10 @@
 		['number','Gimme Number',],
 		['letter','Gimme Letter',],
 		['color','Gimme Color',],
-		['sound','Gimme Sound',],
+		['sound','Gimme Sound'],
 		];
+		
+		flagTombol = {sound: 0,}
 		
 		function press(act){
 			switch(act) {
@@ -234,18 +269,35 @@
 				break;
 			  case 'sound':
 			    // Matikan instrumen saat ini jika ada
-				if (currentInstrument) {
-					currentInstrument.dispose();
-				}
-
+				matikanMusik();
+				
 				const randomFrequency = getRandomFrequency();
-				const randomInstrument = getRandomInstrument();
+				randomInstrument = getRandomInstrument();
 
 				currentInstrument = randomInstrument.create();
 
 				// Menampilkan nada dan instrumen
 				document.getElementById('content').innerHTML = `${randomFrequency.note}${randomInstrument.emoji}`;
 				document.getElementById('content').innerHTML += '<br><button onclick="currentInstrument.triggerAttackRelease('+randomFrequency.freq+', \'8n\');" class="play-btn"><span class="play-icon"></span></button>';
+				if (flagTombol.sound == 0){
+					flagTombol.sound = 1;
+					jenisTombol.push(['chord','Gimme Chord']);
+				}
+				break;
+			   case 'chord':
+				// Matikan instrumen saat ini jika ada
+				matikanMusik();
+
+				const randomChordType = getRandomChordType();
+				randomChord = getRandomChord(randomChordType);
+				randomInstrument = getRandomInstrument();
+
+				currentInstruments = randomChord.map(() => randomInstrument.create()); // Buat instance baru untuk setiap nada dalam chord
+				
+
+			   // Menampilkan chord dan instrumen
+				document.getElementById('content').innerHTML = `Chord (${randomChordType}): ${randomChord.map(frequencyToNote).join(', ')}${randomInstrument.emoji}`;
+				document.getElementById('content').innerHTML += '<br><button onclick="currentInstruments.forEach((inst, index) => {inst.triggerAttackRelease(randomChord[index], \'4n\');});" class="play-btn"><span class="play-icon"></span></button>';
 				break;
 			}
 			
