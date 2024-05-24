@@ -222,6 +222,15 @@
             return chord;
         }
 		
+        // Fungsi untuk menghasilkan melodi acak
+        function getRandomMelody(length) {
+            const melody = [];
+            for (let i = 0; i < length; i++) {
+                melody.push(getRandomFrequency().freq);
+            }
+            return melody;
+        }
+		
         // Fungsi untuk memilih jenis chord secara acak
         function getRandomChordType() {
             const types = Object.keys(chordIntervals);
@@ -251,10 +260,10 @@
 		['number','Gimme Number',],
 		['letter','Gimme Letter',],
 		['color','Gimme Color',],
-		['sound','Gimme Sound'],
+		['sound','Gimme Note'],
 		];
 		
-		flagTombol = {sound: 0, number: 10,}
+		flagTombol = {sound: 0, number: 10, chordMelody: 0,}
 		
 		function press(act){
 			switch(act) {
@@ -282,7 +291,7 @@
 
 				// Menampilkan nada dan instrumen
 				document.getElementById('content').innerHTML = `${randomFrequency.note}${randomInstrument.emoji}`;
-				document.getElementById('content').innerHTML += '<br><button onclick="currentInstrument.triggerAttackRelease('+randomFrequency.freq+', \'8n\');" class="play-btn"><span class="play-icon"></span></button>';
+				document.getElementById('content').innerHTML += '<br><button onclick="matikanMusik();currentInstrument.triggerAttackRelease('+randomFrequency.freq+', \'8n\');" class="play-btn"><span class="play-icon"></span></button>';
 				if (flagTombol.sound == 0){
 					flagTombol.sound = 1;
 					jenisTombol.push(['chord','Gimme Chord']);
@@ -301,7 +310,25 @@
 
 			   // Menampilkan chord dan instrumen
 				document.getElementById('content').innerHTML = `Chord (${randomChordType}): ${randomChord.map(frequencyToNote).join(', ')}${randomInstrument.emoji}`;
-				document.getElementById('content').innerHTML += '<br><button onclick="currentInstruments.forEach((inst, index) => {inst.triggerAttackRelease(randomChord[index], \'4n\');});" class="play-btn"><span class="play-icon"></span></button>';
+				document.getElementById('content').innerHTML += '<br><button onclick="matikanMusik();currentInstruments.forEach((inst, index) => {inst.triggerAttackRelease(randomChord[index], \'4n\');});" class="play-btn"><span class="play-icon"></span></button>';
+				if (flagTombol.chordMelody == 0){
+					flagTombol.chordMelody = 1;
+					jenisTombol.push(['melody','Gimme Melody']);
+				}
+				break;
+				case 'melody':
+					// Matikan instrumen saat ini jika ada
+					matikanMusik();
+
+					randomMelody = getRandomMelody(1+Math.ceil(Math.random()*9)); // Misalnya, melodi dengan 8 nada
+					randomInstrument = getRandomInstrument();
+
+					currentInstrument = randomInstrument.create();
+					
+
+				   // Menampilkan chord dan instrumen
+					document.getElementById('content').innerHTML = `Melody: ${randomMelody.map(frequencyToNote).join(', ')}${randomInstrument.emoji}`;
+					document.getElementById('content').innerHTML += '<br><button onclick="matikanMusik();let time = 0;randomMelody.forEach((note, index) => {currentInstrument.triggerAttackRelease(note, \'8n\', time);time += 0.5;});" class="play-btn"><span class="play-icon"></span></button>';
 				break;
 			}
 			
