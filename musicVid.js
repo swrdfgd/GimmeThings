@@ -42,7 +42,7 @@ function videoTop(firstTime = true, nextPageToken = '', idChannel = '', apiKey =
 
 function genRandomMusicVid(){
 	var randomVideoId = daftarChannelAda[Math.floor(Math.random() * daftarChannelAda.length)];;
-	document.getElementById('content').innerHTML = '<div id="video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+	document.getElementById('content').innerHTML = '<div id="video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/'+randomVideoId+'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
 	videoTop();
 }
 
