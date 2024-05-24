@@ -299,6 +299,7 @@
 					Tone.Transport.start();
 
 		}
+			
 	</script>
 
     <script>
@@ -309,7 +310,7 @@
 		['sound','Gimme Note'],
 		];
 		
-		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0,}
+		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0,}
 		rationalSet = [[0,1]];
 		
 		function press(act){
@@ -415,6 +416,15 @@
 				   // Menampilkan chord dan instrumen
 					document.getElementById('content').innerHTML = `Melody: ${randomMelody.map(item => item.noteName).join(', ')}${randomInstrument.emoji}`;
 					document.getElementById('content').innerHTML += '<br><button onclick="replayMelody()" class="play-btn"><span class="play-icon"></span></button>';
+					
+					if (flagTombol.musicVideo == 0){
+						$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/GimmeThings/musicVid.js');
+						$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/RandomYoutube/MusicAndDance'+Math.ceil(Math.random()*10)+'.js');
+					}
+					
+				break;
+				case 'musicVid':
+					genRandomMusicVid();
 				break;
 			}
 			
