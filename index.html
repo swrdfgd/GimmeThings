@@ -1,420 +1,216 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gimme Things</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: Arial, sans-serif;
-            position: relative;
-            background-color: #f0f0f0;
-        }
-        .corner-button {
-            position: absolute;
-            width: 200px;
-            height: 100px;
-            font-size: 18px;
-            font-weight: bold;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.3s, background 0.3s;
-            border-radius: 50px; /* Membuat tombol berbentuk elips */
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            border: 3px solid #fff; /* Menambahkan border */
-        }
-        .corner-button:active {
-            transform: scale(0.95); /* Efek animasi saat tombol ditekan */
-            background: radial-gradient(circle at center, #ffffff, #ff4500); /* Warna berubah saat ditekan */
-        }
-        #button-top-left {
-            top: 20px;
-            left: 20px;
-            background: radial-gradient(circle at center, #ffffff, #ff7f50);
-        }
-        #button-top-right {
-            top: 20px;
-            right: 20px;
-            background: radial-gradient(circle at center, #ffffff, #7fff00);
-        }
-        #button-bottom-left {
-            bottom: 20px;
-            left: 20px;
-            background: radial-gradient(circle at center, #ffffff, #1e90ff);
-        }
-        #button-bottom-right {
-            bottom: 20px;
-            right: 20px;
-            background: radial-gradient(circle at center, #ffffff, #ff69b4);
-        }
-        #content {
-            width: 60%;
-			height: 50%;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			border: 2px solid black;
-			background-color: #fff;
-			font-size: 48px; /* Ukuran teks besar */
-			text-align: center;
-			transition: background-color 0.3s;
-			color: white; /* Warna teks putih */
-			text-shadow: 2px 2px 10px #000000; /* Shadow hitam tebal */
-        }
-        @media (max-width: 800px) {
-            .corner-button {
-                width: 150px;
-                height: 75px;
-                font-size: 16px;
-            }
-            #content {
-                width: 70%;
-                height: 40%;
-                font-size: 20px;
-            }
-        }
-        @media (max-width: 600px) {
-            .corner-button {
-                width: 100px;
-                height: 50px;
-                font-size: 14px;
-            }
-            #content {
-                width: 80%;
-                height: 30%;
-                font-size: 18px;
-            }
-        }
-		
-		.play-btn {
-			width: 100px;
-			height: 100px;
-			background-color: #FFD700; /* Warna kuning */
-			border: 0;
-			position: relative;
-			cursor: pointer;
-		}
+  <title>Random Number Generator</title>
+  
+  <script src='https://polyfill.io/v3/polyfill.min.js?features=es6'></script>
+  <script async='async' id='MathJax-script' src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'></script>
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
 
-		.play-icon {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%) rotate(270deg);
-			width: 0;
-			height: 0;
-			border-left: 30px solid transparent;
-			border-right: 30px solid transparent;
-			border-top: 50px solid #fff; /* Warna putih */
-		}
-    </style>
-	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js' type='text/javascript'></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.39/Tone.min.js"></script>
-	
-</head>
-<body>
-    <button id="button-top-left" class="corner-button">Button 1</button>
-    <button id="button-top-right" class="corner-button">Button 2</button>
-    <button id="button-bottom-left" class="corner-button">Button 3</button>
-    <button id="button-bottom-right" class="corner-button">Button 4</button>
+    h1 {
+      text-align: center;
+      padding-top: 40px;
+      color: #333;
+    }
 
-    <div id="content">Press a Button</div>
+    .container {
+      margin: 40px auto;
+      max-width: 400px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    select,
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button:active {
+      background-color: #45a0E2;
+    }
+
+
+    #result {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
+      color: #333;
+    }
+  </style>
+  
+  <script>
+	rationalSet = [[0,1]];
 	
-	<script>
-	//Fungsi-Fungsi
-	function getRandomHexColor() {
-		// Generate a random integer between 0 and 16777215 (0xFFFFFF)
-		const randomInt = Math.floor(Math.random() * 16777215);
-		// Convert the integer to a hexadecimal string and pad with leading zeros if necessary
-		const hexString = randomInt.toString(16).padStart(6, '0');
-		// Return the hex color code with a leading '#'
-		return `#${hexString}`;
+	function rationalSetUpdate(){
+		var rationalSetNew = [];
+		pilihanI = Math.floor(Math.random()*rationalSet.length);
+		for (let i = 0; i < rationalSet.length; i++){
+			rationalSetNew.push(rationalSet[i])
+			
+			if (i == pilihanI){
+				if (i < rationalSet.length - 1){
+					rationalSetNew.push([rationalSet[i][0] + rationalSet[i+1][0],rationalSet[i][1] + rationalSet[i+1][1]]);
+				}
+				else {
+					rationalSetNew.push([rationalSet[i][0] + 1,rationalSet[i][1]]);
+				}
+			}
+		}
+		rationalSet = rationalSetNew;
+		if (Math.random() < 1/2){rationalSetUpdate();}
 	}
 	
-	//Music Note
-        // Daftar frekuensi nada dalam skala musik yang lebih lengkap (C4 hingga B4 termasuk nada kromatis)
-        const frequencies = [
-            { note: 'C4', freq: 261.63 },
-            { note: 'C#4/Db4', freq: 277.18 },
-            { note: 'D4', freq: 293.66 },
-            { note: 'D#4/Eb4', freq: 311.13 },
-            { note: 'E4', freq: 329.63 },
-            { note: 'F4', freq: 349.23 },
-            { note: 'F#4/Gb4', freq: 369.99 },
-            { note: 'G4', freq: 392.00 },
-            { note: 'G#4/Ab4', freq: 415.30 },
-            { note: 'A4', freq: 440.00 },
-            { note: 'A#4/Bb4', freq: 466.16 },
-            { note: 'B4', freq: 493.88 }
-        ];
-		
-        // Daftar interval untuk berbagai jenis akord
-        const chordIntervals = {
-            major: [0, 4, 7],
-            minor: [0, 3, 7],
-            augmented: [0, 4, 8],
-            diminished: [0, 3, 6],
-            sus2: [0, 2, 7],
-            sus4: [0, 5, 7],
-            dominant7: [0, 4, 7, 10],
-            major7: [0, 4, 7, 11],
-            minor7: [0, 3, 7, 10],
-            diminished7: [0, 3, 6, 9],
-            augmented7: [0, 4, 8, 10],
-            minorMajor7: [0, 3, 7, 11]
-            // Anda dapat menambahkan jenis akord lain sesuai kebutuhan
-        };		
+	rationalSetUpdate();
+  
+  </script>
+  
+  <script>
+    var hasilSebelumnya; var OK = false;
+	const sleep = (s) =>
+	new Promise((p) => setTimeout(p, (s * 1000) | 0))
+	
+    async function generateNumber(numberType='',deep=0) {
+	  
+	  console.log(deep)
+	  await sleep(1)
+	  if (numberType == ''){
+		var select = document.getElementById("numberType");
+		numberType = select.value;
+	  }
+      var result = document.getElementById("result");
+      var randomNumber;
+	  var count = 0;
+	  var randomNumber1;
+	  var randomNumber2;
+	  
 
-        // Daftar instrumen yang tersedia di Tone.js beserta emoji
-        const instruments = [
-            { create: () => new Tone.Synth().toDestination(), emoji: '🎹' },
-            { create: () => new Tone.AMSynth().toDestination(), emoji: '🎷' },
-            { create: () => new Tone.FMSynth().toDestination(), emoji: '🎸' },
-            { create: () => new Tone.MembraneSynth().toDestination(), emoji: '🥁' },
-            { create: () => new Tone.MetalSynth().toDestination(), emoji: '🔔' },
-			/*
-            { create: () => new Tone.NoiseSynth({
-                noise: {
-                    type: 'white'
-                },
-                envelope: {
-                    attack: 0.005,
-                    decay: 0.1,
-                    sustain: 0.1,
-                    release: 1
-                }
-            }).toDestination(), emoji: '🌬️' },
-            { create: () => new Tone.PluckSynth({
-                attackNoise: 0.1,
-                dampening: 1000,
-                resonance: 0.7,
-                release: 1
-            }).toDestination(), emoji: '🎻' }
-			*/
-        ];
-
-        let currentInstrument = null;
-		let currentInstruments = []; // Menggunakan array untuk menyimpan instance instrumen
-		let randomChord = [];
-		let currentPart = null;
-
-        // Fungsi untuk menghasilkan nada acak
-        function getRandomFrequency() {
-            return frequencies[Math.floor(Math.random() * frequencies.length)];
-        }
-		
-        // Fungsi untuk menghasilkan chord acak
-        function getRandomChord(chordType) {
-            const rootNoteObj = getRandomFrequency();
-            const rootNote = rootNoteObj.freq;
-            const intervals = chordIntervals[chordType];
-            if (!intervals) return []; // Jika jenis akord tidak ada dalam daftar, kembalikan array kosong
-
-            const chord = intervals.map(interval => {
-                const index = (frequencies.findIndex(note => note.freq === rootNote) + interval) % frequencies.length;
-                return frequencies[index].freq;
-            });
-            return chord;
-        }
-		
-        // Fungsi untuk menghasilkan melodi acak
-        function getRandomMelody(length) {
-            const melody = [];
-            for (let i = 0; i < length; i++) {
-                const note = getRandomFrequency();
-                melody.push({ time: `0:${i}`, note: note.freq, noteName: note.note });
-            }
-            return melody;
-        }
-		
-        // Fungsi untuk memilih jenis chord secara acak
-        function getRandomChordType() {
-            const types = Object.keys(chordIntervals);
-            return types[Math.floor(Math.random() * types.length)];
-        }
-		
-        // Fungsi untuk menghasilkan instrumen acak
-        function getRandomInstrument() {
-            return instruments[Math.floor(Math.random() * instruments.length)];
-        }
-
-       // Fungsi untuk mengonversi frekuensi menjadi nama nada
-        function frequencyToNote(frequency) {
-            const noteIndex = Math.round(12 * (Math.log2(frequency / 440))) + 57;
-            return frequencies[noteIndex % 12].note;
-        }
-		
-		function matikanMusik(){
-			if (currentInstrument) {currentInstrument.dispose();}
-			currentInstruments.forEach(inst => {inst.dispose();});
-			if (currentPart) {
-                currentPart.stop();
-                currentPart.dispose();
-            }
-		}
-		
-		function replayMelody(){
-					// Matikan instrumen saat ini jika ada
-					matikanMusik();
-					
-					Tone.Transport.stop();
-                    Tone.Transport.cancel();
-
-					currentInstrument = randomInstrument.create();
-					
-					currentPart = new Tone.Part((time, value) => {
-                    currentInstrument.triggerAttackRelease(value.note, '8n', time);
-                    }, randomMelody).start(0);
-					Tone.Transport.start();
-
-		}
-	</script>
-
-    <script>
-		jenisTombol = [
-		['number','Gimme Number',],
-		['letter','Gimme Letter',],
-		['color','Gimme Color',],
-		['sound','Gimme Note'],
-		];
-		
-		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0}
-		
-		function press(act){
-			switch(act) {
-			  case 'number':
-				angkaAcak = Math.floor(Math.random()*flagTombol.number);
-				document.getElementById('content').innerHTML = angkaAcak;
-				if (Math.random() < (1/(angkaAcak+1))){
-					flagTombol.number += angkaAcak;
+      switch (numberType) {		
+        case "integer":
+          randomNumber = (Math.floor(1/(1-Math.random()))-1)*((-1)**(Math.floor(Math.random()*2))); // Generates a random integer between 0 and 99
+          break;
+        case "natural":
+          randomNumber = Math.floor(1/(1-Math.random())) + Math.floor(Math.random()*count); count++; 
+          break;
+        case "decimal":
+          randomNumber = ((1/(1-Math.random()))-1)*((-1)**(Math.floor(Math.random()*2))); // Generates a random decimal with 2 decimal places
+		  if (Math.random() < 1/2){
+			randomNumber1 = '' + (Math.floor(1/(1-Math.random()))-1)*((-1)**(Math.floor(Math.random()*2)));
+			while (Math.random() < 1/2){
+				randomNumber1 += Math.floor(Math.random()*10);
+			}
+			randomNumber2 = '' + Math.floor(1/(1-Math.random())) + Math.floor(Math.random()*count);
+			while (Math.random() < 1/2){
+				randomNumber2 += Math.floor(Math.random()*10);
+			}
+			randomNumber = randomNumber1 + '.' + randomNumber2;
+		  }
+          break;
+		 case "rational":
+          randomNumberRat = rationalSet[Math.floor(Math.random()*rationalSet.length)]; 
+		  randomNumber = '\\frac{' + randomNumberRat[0] + '}{' + randomNumberRat[1] + '}';
+		  if (Math.random() < 1/2){randomNumber = '-' + randomNumber;}
+          break;
+		 case "constructible":
+			if (deep == 0){
+				randomNumber = generateNumber('integer');
+			}
+			else{
+				deep--;
+				var daftarOperasi = ['bilangan','tambah','kurang','kali','bagi','kurung','akar'];
+				var pilihanOperasi= daftarOperasi[Math.floor(Math.random()*daftarOperasi.length)];
+				if (pilihanOperasi == 'bilangan'){randomNumber = generateNumber('integer');}
+				if (pilihanOperasi == 'tambah'){
+					randomNumber1 = '' + generateNumber('constructible',deep);
+					randomNumber2 = '' + generateNumber('constructible',deep);
+					if (randomNumber2[0] == '-'){randomNumber2 = ' \\left ( ' + randomNumber2 + '\\right ) '}
+					randomNumber = randomNumber1 + ' + ' + randomNumber2;
 				}
-				if (flagTombol.integer == 0){
-					flagTombol.integer = 1;
-					jenisTombol.push(['integer','Gimme Integer']);
+				if (pilihanOperasi == 'kurang'){
+					randomNumber1 = '' + generateNumber('constructible',deep);
+					randomNumber2 = '' + generateNumber('constructible',deep);
+					if (randomNumber2[0] == '-'){randomNumber2 = ' \\left ( ' + randomNumber2 + '\\right ) '}
+					randomNumber = randomNumber1 + ' - ' + randomNumber2;
 				}
-				break;
-			  case 'integer':
-				angkaAcak = Math.floor(Math.random()*flagTombol.number);
-				document.getElementById('content').innerHTML = angkaAcak;
-				if (Math.random() < 1/2){
-					if (document.getElementById('content').innerHTML != '0'){
-						document.getElementById('content').innerHTML = '-' + document.getElementById('content').innerHTML;
+				if (pilihanOperasi == 'kali'){
+					randomNumber1 = '' + generateNumber('constructible',deep);
+					randomNumber2 = '' + generateNumber('constructible',deep);
+					var daftarKali = ['kurung',' \\times ',' \\cdot '];
+					var pilihanKali = daftarKali[Math.floor(Math.random()*3)]
+					if (pilihanKali[1] == '\\'){
+						if (randomNumber2[0] == '-'){randomNumber2 = ' \\left ( ' + randomNumber2 + '\\right ) '}
+						randomNumber = randomNumber1 + pilihanKali + randomNumber2;
+					}
+					else{
+						randomNumber = ' \\left ( ' + randomNumber1 + '\\right ) ' + ' \\left ( ' + randomNumber2 + '\\right ) ';
 					}
 				}
-				if (Math.random() < (1/(angkaAcak+1))){
-					flagTombol.number += angkaAcak;
+				if (pilihanOperasi == 'bagi'){
+					randomNumber1 = '' + generateNumber('constructible',deep);
+					randomNumber2 = '' + generateNumber('constructible',deep);
+					randomNumber = ' \\frac{' + randomNumber1 + '}{' + randomNumber2 + '} ';
 				}
-				jenisTombol[0][1] = 'Gimme Natural Number';
-			  break;
-			  case 'letter':
-				document.getElementById('content').innerHTML = 'QWERTYUIOPASDFGHJKLZXCVBNM'[Math.floor(Math.random()*26)];
-				break;
-			  case  'color':
-				document.getElementById('content').style.backgroundColor = getRandomHexColor();
-				break;
-			  case 'sound':
-			    // Matikan instrumen saat ini jika ada
-				matikanMusik();
-				
-				const randomFrequency = getRandomFrequency();
-				randomInstrument = getRandomInstrument();
-
-				currentInstrument = randomInstrument.create();
-
-				// Menampilkan nada dan instrumen
-				document.getElementById('content').innerHTML = `${randomFrequency.note}${randomInstrument.emoji}`;
-				document.getElementById('content').innerHTML += '<br><button onclick="currentInstrument.triggerAttackRelease('+randomFrequency.freq+', \'8n\');" class="play-btn"><span class="play-icon"></span></button>';
-				if (flagTombol.sound == 0){
-					flagTombol.sound = 1;
-					jenisTombol.push(['chord','Gimme Chord']);
+				if (pilihanOperasi == 'kurung'){
+					randomNumber = ' \\left ( ' + generateNumber('constructible',deep) + '\\right ) ';
 				}
-				break;
-			   case 'chord':
-				// Matikan instrumen saat ini jika ada
-				matikanMusik();
-
-				const randomChordType = getRandomChordType();
-				randomChord = getRandomChord(randomChordType);
-				randomInstrument = getRandomInstrument();
-
-				currentInstruments = randomChord.map(() => randomInstrument.create()); // Buat instance baru untuk setiap nada dalam chord
-				
-
-			   // Menampilkan chord dan instrumen
-				document.getElementById('content').innerHTML = `Chord (${randomChordType}): ${randomChord.map(frequencyToNote).join(', ')}${randomInstrument.emoji}`;
-				document.getElementById('content').innerHTML += '<br><button onclick="currentInstruments.forEach((inst, index) => {inst.triggerAttackRelease(randomChord[index], \'4n\');});" class="play-btn"><span class="play-icon"></span></button>';
-				if (flagTombol.chordMelody == 0){
-					flagTombol.chordMelody = 1;
-					jenisTombol.push(['melody','Gimme Melody']);
+				if (pilihanOperasi == 'akar'){
+					randomNumber = ' \\sqrt{' + generateNumber('constructible',deep) + '} ';
 				}
-				break;
-				case 'melody':
-					// Matikan instrumen saat ini jika ada
-					matikanMusik();
 					
-					Tone.Transport.stop();
-                    Tone.Transport.cancel();
-
-					randomMelody = getRandomMelody(1+Math.ceil(Math.random()*9)); // Misalnya, melodi dengan 8 nada
-					randomInstrument = getRandomInstrument();
-
-					currentInstrument = randomInstrument.create();
-					
-					currentPart = new Tone.Part((time, value) => {
-                    currentInstrument.triggerAttackRelease(value.note, '8n', time);
-                    }, randomMelody).start(0);
-
-                    // Atur tempo
-                    Tone.Transport.bpm.value = 119 + Math.ceil(Math.random()*81);
-					Tone.Transport.start();
-
-				   // Menampilkan chord dan instrumen
-					document.getElementById('content').innerHTML = `Melody: ${randomMelody.map(item => item.noteName).join(', ')}${randomInstrument.emoji}`;
-					document.getElementById('content').innerHTML += '<br><button onclick="replayMelody()" class="play-btn"><span class="play-icon"></span></button>';
-				break;
 			}
-			
-			generateTombol();			
-		}
-		
-		function generateTombol(){
-			a = jenisTombol[Math.floor(Math.random()*jenisTombol.length)];
-			b = jenisTombol[Math.floor(Math.random()*jenisTombol.length)];
-			c = jenisTombol[Math.floor(Math.random()*jenisTombol.length)];
-			d = jenisTombol[Math.floor(Math.random()*jenisTombol.length)];
-		
-			document.getElementById('button-top-left').innerHTML = a[1];
-			document.getElementById('button-top-right').innerHTML = b[1];
-			document.getElementById('button-bottom-left').innerHTML = c[1];
-			document.getElementById('button-bottom-right').innerHTML = d[1];		
-		}
-		generateTombol();
-		
-		
-		document.getElementById('button-top-left').addEventListener('click', function() {
-			press(a[0]);
-		});
-		
-		
-		document.getElementById('button-top-right').addEventListener('click', function() {
-			press(b[0]);
-		});
+			break;
+        default:
+          randomNumber = "Invalid selection";
+      }
+      if (OK == false){if ((hasilSebelumnya = randomNumber)&&(Math.random() < 1/2)){ generateNumber(); return }}
 
-		document.getElementById('button-bottom-left').addEventListener('click', function() {
-			press(c[0]);
-		});
-
-		document.getElementById('button-bottom-right').addEventListener('click', function() {
-			press(d[0])
-		});
-</script>
+      result.textContent = "Result: " + '\\(' + randomNumber + '\\)';
+      hasilSebelumnya = randomNumber; OK = true;
+	
+	  rationalSetUpdate();
+	  MathJax.typeset();
+	  return randomNumber
+    }
+  </script>
+</head>
+<body>
+  <h1>Random Number Generator</h1>
+  <div class="container">
+    <label for="numberType">Select number type:</label>
+    <select id="numberType">
+      <option value="integer">Integer</option>
+      <option value="natural">Natural Number</option>
+      <option value="decimal">Decimal Number</option>
+	  <option value="rational">Rational Number</option>
+	  <option value="constructible">Constructible Number</option>
+    </select>
+    <button onclick="deep=Math.floor(Math.random()*4);if (Math.random() < 1/2){deep++;} generateNumber('',deep)">Generate</button>
+    <div id="result"></div>
+  </div>
 </body>
 </html>
