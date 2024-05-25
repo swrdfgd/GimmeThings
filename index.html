@@ -156,12 +156,12 @@
 	}
 	
 	function getRandomHexColor() {
-		// Generate a random integer between 0 and 16777215 (0xFFFFFF)
-		const randomInt = Math.floor(Math.random() * 16777215);
-		// Convert the integer to a hexadecimal string and pad with leading zeros if necessary
-		const hexString = randomInt.toString(16).padStart(6, '0');
-		// Return the hex color code with a leading '#'
-		return `#${hexString}`;
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
 	}
 	
 	//Music Note
@@ -312,7 +312,7 @@
 		['sound','Gimme Note'],
 		];
 		
-		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0, vector: 0,}
+		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0, vector: 0, gradient: 0}
 		rationalSet = [[0,1]];
 		
 		function genNatural(){
@@ -376,7 +376,14 @@
 				document.getElementById('content').innerHTML = 'QWERTYUIOPASDFGHJKLZXCVBNM'[Math.floor(Math.random()*26)];
 				break;
 			  case  'color':
+				document.getElementById('content').style.setProperty('background','initial');
 				document.getElementById('content').style.backgroundColor = getRandomHexColor();
+				if (flagTombol.gradient == 0){
+					$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/GimmeThings/gimmeGradient.js');
+				}
+				break;
+			  case  'gradient':
+				document.getElementById('content').style.background = getRandomGradient();
 				break;
 			  case 'sound':
 			    // Matikan instrumen saat ini jika ada
