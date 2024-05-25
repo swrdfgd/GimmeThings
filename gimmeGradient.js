@@ -9,7 +9,7 @@ function getRandomGradient() {
 	}
 
 	for (var i = 0; i < numColors; i++) {
-		gradient += getRandomColor() + ' ' + Math.floor(Math.random() * 100) + '%';;
+		gradient += getRandomHexColor() + ' ' + Math.floor(Math.random() * 100) + '%';;
 		if (i < numColors - 1) {
 			gradient += ', ';
 		}
