@@ -312,7 +312,7 @@
 		['sound','Gimme Note'],
 		];
 		
-		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0, vector: 0, gradient: 0}
+		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0, vector: 0, gradient: 0, polynomial: 0}
 		rationalSet = [[0,1]];
 		
 		function genNatural(){
@@ -321,6 +321,15 @@
 				if (Math.random() < (1/(hasil+1))){
 					flagTombol.number += hasil;
 				}
+				return hasil
+		}
+		function genInteger(){
+			    hasil = Math.floor(Math.random()*flagTombol.number);
+				document.getElementById('content').innerHTML = hasil;
+				if (Math.random() < (1/(hasil+1))){
+					flagTombol.number += hasil;
+				}
+				if (Math.random() < 1/2){hasil = -hasil}
 				return hasil
 		}
 		
@@ -334,16 +343,7 @@
 				}
 				break;
 			  case 'integer':
-				angkaAcak = Math.floor(Math.random()*flagTombol.number);
-				document.getElementById('content').innerHTML = angkaAcak;
-				if (Math.random() < 1/2){
-					if (document.getElementById('content').innerHTML != '0'){
-						document.getElementById('content').innerHTML = '-' + document.getElementById('content').innerHTML;
-					}
-				}
-				if (Math.random() < (1/(angkaAcak+1))){
-					flagTombol.number += angkaAcak;
-				}
+				document.getElementById('content').innerHTML = genInteger();
 				jenisTombol[0][1] = 'Gimme Natural Number';
 				if (flagTombol.rational == 0){
 					flagTombol.rational = 1;
@@ -361,13 +361,16 @@
 					flagTombol.vector = 1;
 					jenisTombol.push(['vector','Gimme Vector']);
 				}
+				if (flagTombol.polynomial == 0){
+					$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/GimmeThings/gimmePolynomials.js');
+				}
 				break;
 			  case 'vector':
 				var dimensiVec = 2
 				while (Math.random() < 1/2){dimensiVec++}
 				var vektor = '\\( \\begin{pmatrix}';
 				for (let i = 0; i < dimensiVec; i++){
-					vektor += genNatural() + '\\\\'
+					vektor += genInteger() + '\\\\'
 				}
 				vektor += '\\end{pmatrix}\\)';
 				document.getElementById('content').innerHTML = vektor;
@@ -382,6 +385,9 @@
 					$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/GimmeThings/gimmeGradients.js');
 				}
 				break;
+			  case 'polynomial':
+				document.getElementById('content').innerHTML = genPolynom();
+			    break;
 			  case  'gradient':
 				document.getElementById('content').style.background = getRandomGradient();
 				break;
