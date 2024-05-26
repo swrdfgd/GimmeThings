@@ -312,7 +312,7 @@
 		['sound','Gimme Note'],
 		];
 		
-		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0, vector: 0, gradient: 0, polynomial: 0}
+		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0, vector: 0, gradient: 0, polynomial: 0, sequence: 0,}
 		rationalSet = [[0,1]];
 		
 		function genNatural(){
@@ -350,6 +350,9 @@
 					rationalSetUpdate();
 					jenisTombol.push(['rational','Gimme Rational Number']);
 				}
+				if (flagTombol.sequence == 0){
+					$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/GimmeThings/gimmeSequence.js');
+				}
 				break;
 			  case 'rational':
 				randomNumberRat = rationalSet[Math.floor(Math.random()*rationalSet.length)]; 
@@ -364,6 +367,9 @@
 				if (flagTombol.polynomial == 0){
 					$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/GimmeThings/gimmePolynomialss.js');
 				}
+				break;
+			  case 'sequence':
+				document.getElementById('content').innerHTML = genSequence();
 				break;
 			  case 'vector':
 				var dimensiVec = 2
