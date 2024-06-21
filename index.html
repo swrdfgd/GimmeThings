@@ -312,7 +312,9 @@
 		['sound','Gimme Note'],
 		];
 		
-		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0, vector: 0, gradient: 0, polynomial: 0, sequence: 0,}
+		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0, vector: 0, gradient: 0, polynomial: 0, sequence: 0, word: 0,
+		factorial: 0,
+		}
 		rationalSet = [[0,1]];
 		
 		function genNatural(){
@@ -337,6 +339,12 @@
 			switch(act) {
 			  case 'number':
 				document.getElementById('content').innerHTML = genNatural();
+				if (flagTombol.factorial == 1 && Math.random() < 1/2){
+						document.getElementById('content').innerHTML += '!';
+				}
+				if (flagTombol.factorial == 0 && Math.random() < 1/2){
+						flagTombol.factorial = 1;
+				}
 				if (flagTombol.integer == 0){
 					flagTombol.integer = 1;
 					jenisTombol.push(['integer','Gimme Integer']);
@@ -383,7 +391,14 @@
 			  break;
 			  case 'letter':
 				document.getElementById('content').innerHTML = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm'[Math.floor(Math.random()*52)];
+				if (flagTombol.word == 0){
+					$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/GimmeThings/englishWordsFreqAsc.js');
+					$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/GimmeThings/gimmeWords.js');
+				}
 				break;
+			   case 'word':
+				document.getElementById('content').innerHTML = genWord();
+			    break;
 			  case  'color':
 				document.getElementById('content').style.setProperty('background','initial');
 				document.getElementById('content').style.backgroundColor = getRandomHexColor();
