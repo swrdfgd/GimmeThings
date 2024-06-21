@@ -313,7 +313,7 @@
 		];
 		
 		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0, vector: 0, gradient: 0, polynomial: 0, sequence: 0, word: 0,
-		factorial: 0,
+		factorial: 0, greekLetter: 0, 
 		}
 		rationalSet = [[0,1]];
 		
@@ -393,8 +393,15 @@
 				document.getElementById('content').innerHTML = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm'[Math.floor(Math.random()*52)];
 				if (flagTombol.word == 0){
 					$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/GimmeThings/englishWordsFreqAsc.js');
-					$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/GimmeThings/gimmeWords.js');
+					$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/GimmeThings/gimmeWordsss.js');
 				}
+				if (flagTombol.greekLetter == 0){
+					jenisTombol.push(['greekLetter','Gimme Greek Letter']);
+					flagTombol.greekLetter = 1;
+				}
+				break;
+			   case 'greekLetter':
+				document.getElementById('content').innerHTML = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω'[Math.floor(Math.random()*48)];
 				break;
 			   case 'word':
 				document.getElementById('content').innerHTML = genWord();
