@@ -313,7 +313,7 @@
 		];
 		
 		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0, vector: 0, gradient: 0, polynomial: 0, sequence: 0, word: 0,
-		factorial: 0, greekLetter: 0, password: 0, angle: 0, elementaryParticle: 0,
+		factorial: 0, greekLetter: 0, password: 0, angle: 0, elementaryParticle: 0, greekWords: 0
 		}
 		rationalSet = [[0,1]];
 		elementaryParticles = ['Up Quark','Charm Quark','Top Quark','Down Quark','Strange Quark','Bottom Quark','Gluon','Photon','Higgs Boson','Electron','Muon','Tau','Electron Neutrino','Muon Neutrino','Tau Neutrino','Z Boson','W Boson']
@@ -423,7 +423,13 @@
 				break;
 			   case 'greekLetter':
 				document.getElementById('content').innerHTML = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω'[Math.floor(Math.random()*48)];
+				if (flagTombol.greekWords == 0){
+					$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/GimmeThings/greekWords.js');
+				}
 				break;
+			   case 'greekWords':
+				document.getElementById('content').innerHTML = greekWords[Math.floor(Math.random()*greekWords.length)];
+			    break;
 			   case 'word':
 				document.getElementById('content').innerHTML = genWord();
 			    break;
