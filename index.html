@@ -313,7 +313,7 @@
 		];
 		
 		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0, vector: 0, gradient: 0, polynomial: 0, sequence: 0, word: 0,
-		factorial: 0, greekLetter: 0, 
+		factorial: 0, greekLetter: 0, password: 0,
 		}
 		rationalSet = [[0,1]];
 		
@@ -399,12 +399,21 @@
 					jenisTombol.push(['greekLetter','Gimme Greek Letter']);
 					flagTombol.greekLetter = 1;
 				}
+				if (flagTombol.password == 0){
+					$.getScript('https://cdn.jsdelivr.net/gh/swrdfgd/GimmeThings/gimmePassword.js');
+				}
 				break;
 			   case 'greekLetter':
 				document.getElementById('content').innerHTML = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψω'[Math.floor(Math.random()*48)];
 				break;
 			   case 'word':
 				document.getElementById('content').innerHTML = genWord();
+			    break;
+			  case 'password':
+				panjangPassword = 10;
+				while (Math.random() < 1/2){panjangPassword++}
+				panjangPassword = Math.ceil(Math.random()*panjangPassword)
+				document.getElementById('content').innerHTML = genPassword(panjangPassword);
 			    break;
 			  case  'color':
 				document.getElementById('content').style.setProperty('background','initial');
