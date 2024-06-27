@@ -313,9 +313,10 @@
 		];
 		
 		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0, vector: 0, gradient: 0, polynomial: 0, sequence: 0, word: 0,
-		factorial: 0, greekLetter: 0, password: 0, angle: 0
+		factorial: 0, greekLetter: 0, password: 0, angle: 0, elementaryParticle: 0,
 		}
 		rationalSet = [[0,1]];
+		elementaryParticles = ['Up Quark','Charm Quark','Top Quark','Down Quark','Strange Quark','Bottom Quark','Gluon','Photon','Higgs Boson','Electron','Muon','Tau','Electron Neutrino','Muon Neutrino','Tau Neutrino','Z Boson','W Boson']
 		
 		function genNatural(){
 			    hasil = Math.floor(Math.random()*flagTombol.number);
@@ -353,6 +354,10 @@
 					flagTombol.angle = 1;
 					jenisTombol.push(['angle','Gimme Angle']);
 				}
+				if (flagTombol.elementaryParticle == 0){
+					flagTombol.elementaryParticle = 1;
+					jenisTombol.push(['elementaryParticle','Gimme Elementary Particle']);
+				}
 				break;
 			  case 'integer':
 				document.getElementById('content').innerHTML = genInteger();
@@ -382,6 +387,9 @@
 				break;
 			  case 'sequence':
 				document.getElementById('content').innerHTML = genSequence();
+				break;
+			  case 'elementaryParticle':
+				document.getElementById('content').innerHTML = elementaryParticles[Math.floor(Math.random()*elementaryParticles.length)];
 				break;
 			  case 'angle':
 				angle = ''
