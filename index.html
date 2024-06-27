@@ -313,7 +313,7 @@
 		];
 		
 		flagTombol = {sound: 0, number: 10, chordMelody: 0, integer: 0, rational: 0, musicVideo: 0, vector: 0, gradient: 0, polynomial: 0, sequence: 0, word: 0,
-		factorial: 0, greekLetter: 0, password: 0,
+		factorial: 0, greekLetter: 0, password: 0, angle: 0
 		}
 		rationalSet = [[0,1]];
 		
@@ -349,6 +349,10 @@
 					flagTombol.integer = 1;
 					jenisTombol.push(['integer','Gimme Integer']);
 				}
+				if (flagTombol.angle == 0){
+					flagTombol.angle = 1;
+					jenisTombol.push(['angle','Gimme Angle']);
+				}
 				break;
 			  case 'integer':
 				document.getElementById('content').innerHTML = genInteger();
@@ -378,6 +382,12 @@
 				break;
 			  case 'sequence':
 				document.getElementById('content').innerHTML = genSequence();
+				break;
+			  case 'angle':
+				angle = ''
+				if (Math.random() < 1/2){angle = '-'}
+				angle += Math.floor(Math.random()*361) + '°';
+				document.getElementById('content').innerHTML = angle;
 				break;
 			  case 'vector':
 				var dimensiVec = 2
